@@ -1,0 +1,16 @@
+import matplotlib.pyplot as plt
+
+# input data
+hours = [......]
+scores = [.......]
+
+# create a line chart
+plt.plot(hours, scores, color='red', marker='*', markersize=10)
+
+# set the x-axis and y-axis labels and title
+plt.xlabel('Number of hours spent studying')
+plt.ylabel('Score in final exam')
+plt.title('Study hours vs. exam score')
+
+# display the plot
+plt.show()
