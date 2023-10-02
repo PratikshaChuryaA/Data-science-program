@@ -1,0 +1,71 @@
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.metrics import accuracy_score
+
+# Load the iris dataset
+iris = datasets.load_iris()
+X = iris.data
+y = iris.target
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Set the hyperparameters
+kernels = ['rbf']
+gammas = [0.5]
+Cs = [0.01, 1, 10]
+
+best_accuracy = 0
+best_num_support_vectors = 0
+
+# Iterate over different hyperparameters
+for kernel in kernels:
+   for gamma in gammas:
+       for C in Cs:
+           # Train the SVM classifier
+           svm = SVC(kernel=kernel, gamma=gamma, C=C)
+           svm.fit(X_train, y_train)
+           # Make predictions on the test set
+           y_pred = svm.predict(X_test)
+
+           # Calculate accuracy
+           accuracy = accuracy_score(y_test, y_pred)
+           # Get the total number of support vectors
+           num_support_vectors = svm.n_support_.sum()
+
+           # Check if the current model has better accuracy
+           if accuracy > best_accuracy:
+               best_accuracy = accuracy
+               best_num_support_vectors = num_support_vectors
+
+# Print the best accuracy and the total number of support vectors
+print("Best Accuracy:", best_accuracy)
+print("Total Number of Support Vectors:", best_num_support_vectors)
+
+Plotting confusion matrix
+
+# Calculate the confusion matrix
+cm = confusion_matrix(y_test, y_pred)
+
+# Define class labels
+class_names = iris.target_names
+
+
+
+# Plot the confusion matrix
+plt.figure(figsize=(8, 6))
+sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=class_names, yticklabels=class_names)
+plt.title("Confusion Matrix")
+plt.xlabel("Predicted Class")
+plt.ylabel("True Class")
+plt.show()
+
+# Save the model to a file
+
+filename = 'svm_model.pkl'
+with open(filename, 'wb') as file:
+   pickle.dump(svm, file)
+
+with open(filename, 'rb') as file:
+   loaded_model = pickle.load(file)
