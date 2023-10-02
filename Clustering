@@ -1,0 +1,48 @@
+import pandas as pd
+from sklearn.cluster import KMeans, AgglomerativeClustering
+from sklearn.metrics import adjusted_rand_score
+import matplotlib.pyplot as plt
+# Load dataset using pandas
+data = pd.read_csv('spiral.txt', delimiter='\t', header=None, skiprows=1)
+data.columns = ['f1', 'f2', 'label']
+
+# Convert data to float
+data[['f1', 'f2']] = data[['f1', 'f2']].astype(float)
+
+# Extract features and true labels
+X = data[['f1', 'f2']].values
+true_labels = data['label'].values
+
+# Apply K-means clustering
+kmeans = KMeans(n_clusters=3, random_state=42)
+kmeans_labels = kmeans.fit_predict(X)
+kmeans_ri = adjusted_rand_score(true_labels, kmeans_labels)
+
+# Apply Single-link Hierarchical clustering
+single_link = AgglomerativeClustering(n_clusters=3, linkage='single')
+single_link_labels = single
+\_link.fit_predict(X)
+single_link_ri = adjusted_rand_score(true_labels, single_link_labels)
+
+# Apply Complete-link Hierarchical clustering
+complete_link = AgglomerativeClustering(n_clusters=3, linkage='complete')
+complete_link_labels = complete_link.fit_predict(X)
+complete_link_ri = adjusted_rand_score(true_labels, complete_link_labels)
+
+# Visualize the clustering results
+fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+
+# K-means clustering
+axes[0].scatter(X[:, 0], X[:, 1], c=kmeans_labels)
+axes[0].set_title(f"K-means (RI: {kmeans_ri:.3f})")
+
+# Single-link Hierarchical clustering
+axes[1].scatter(X[:, 0], X[:, 1], c=single_link_labels)
+axes[1].set_title(f"Single-link Hierarchical (RI: {single_link_ri:.3f})")
+
+# Complete-link Hierarchical clustering
+axes[2].scatter(X[:, 0], X[:, 1], c=complete_link_labels)
+axes[2].set_title(f"Complete-link Hierarchical (RI: {complete_link_ri:.3f})")
+
+plt.tight_layout()
+plt.show()
